@@ -1,13 +1,9 @@
 import hmac
 import hashlib
 import base64
-import os
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
+from config import SHOPIFY_WEBHOOK_SECRET
 
-load_dotenv()
-
-SHOPIFY_WEBHOOK_SECRET = os.getenv("SHOPIFY_WEBHOOK_SECRET", "688c024dbcf5f42f5424fc1b565488649a92ca433d5c9fccb61446b219f88a18")
 
 processed_event_ids = {}
 
