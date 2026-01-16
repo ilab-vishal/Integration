@@ -2,6 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from shopify.webhook import shopify
+from config import APP_HOST, APP_PORT
 
 app = FastAPI(title="Shopify Webhook Handler")
 
@@ -12,4 +13,4 @@ async def root():
     return {"status": "Shopify Webhook Handler Running"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8050)
+    uvicorn.run(app, host=APP_HOST, port=APP_PORT)

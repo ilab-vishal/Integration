@@ -1,4 +1,4 @@
-from engine.shopify import ShopifyEngine
+from shopify.connection_adapter.adapter import ShopifyEngine
 from utils.response_formatter import format_product_data, format_single_product_data
 
 if __name__ == "__main__":

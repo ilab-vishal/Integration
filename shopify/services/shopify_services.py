@@ -1,28 +1,28 @@
 import requests
-from config import SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET
-from config import get_access_token_url, list_products_url, get_product_url
-
-_store_url = {
-    "12345": "showcasevault.myshopify.com"
-}
-
-_client_screts = {
-    "12345": {
-        "client_key": SHOPIFY_CLIENT_ID,
-        "client_secret": SHOPIFY_CLIENT_SECRET
-    }
-}
+from shopify.config import (
+    get_access_token_url,
+    get_client_credentials,
+    get_product_url,
+    get_store_url,
+    list_products_url,
+)
 
 def _get_store_url(client_id: str):
-    return _store_url.get(client_id)
+    return get_store_url(client_id)
 
 def get_access_token(client_id: str):
     store_url = _get_store_url(client_id)
+    if not store_url:
+        raise ValueError(f"Unknown Shopify client_id: {client_id}")
     access_token_url = get_access_token_url(store_url)
+    credentials = get_client_credentials(client_id) or {}
+    
+    if not credentials.get("client_id") or not credentials.get("client_secret"):
+        raise ValueError(f"Missing Shopify credentials for client_id: {client_id}")
 
     json_body = {
-        "client_id": _client_screts.get(client_id).get("client_key"),
-        "client_secret": _client_screts.get(client_id).get("client_secret"),
+        "client_id": credentials.get("client_id"),
+        "client_secret": credentials.get("client_secret"),
         "grant_type": "client_credentials" 
     }
 
@@ -44,9 +44,12 @@ def get_access_token(client_id: str):
 def list_client_products(
     client_id: str,
     access_token: str,
-    limit:int = None):
+    limit:int = None
+    ):
 
     store_url = _get_store_url(client_id)
+    if not store_url:
+        raise ValueError(f"Unknown Shopify client_id: {client_id}")
     products_url = list_products_url(store_url)
     headers = {
         "Content-Type": "application/json",
@@ -62,8 +65,10 @@ def list_client_products(
     else:
         return None
 
-def get_product(client_id: str,access_token: str, product_id: int):
+def get_client_product(client_id: str,access_token: str, product_id: int):
     store_url = _get_store_url(client_id)
+    if not store_url:
+        raise ValueError(f"Unknown Shopify client_id: {client_id}")
     products_url = get_product_url(store_url, product_id)
     headers = {
         "Content-Type": "application/json",
