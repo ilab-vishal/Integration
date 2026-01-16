@@ -1,5 +1,6 @@
 import requests
-from config import SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET, ACCESS_TOKEN_URL, PRODUCTS_URL , GET_PRODUCT_URL
+from config import SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET
+from config import get_access_token_url, list_products_url, get_product_url
 
 _store_url = {
     "12345": "showcasevault.myshopify.com"
@@ -17,7 +18,7 @@ def _get_store_url(client_id: str):
 
 def get_access_token(client_id: str):
     store_url = _get_store_url(client_id)
-    access_token_url = ACCESS_TOKEN_URL.format(store_url=store_url)
+    access_token_url = get_access_token_url(store_url)
 
     json_body = {
         "client_id": _client_screts.get(client_id).get("client_key"),
@@ -46,7 +47,7 @@ def list_client_products(
     limit:int = None):
 
     store_url = _get_store_url(client_id)
-    products_url = PRODUCTS_URL.format(store_url=store_url)
+    products_url = list_products_url(store_url)
     headers = {
         "Content-Type": "application/json",
         "X-Shopify-Access-Token": access_token
@@ -63,7 +64,7 @@ def list_client_products(
 
 def get_product(client_id: str,access_token: str, product_id: int):
     store_url = _get_store_url(client_id)
-    products_url = GET_PRODUCT_URL.format(store_url=store_url, product_id=product_id)
+    products_url = get_product_url(store_url, product_id)
     headers = {
         "Content-Type": "application/json",
         "X-Shopify-Access-Token": access_token
