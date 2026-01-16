@@ -1,5 +1,5 @@
 from base.base import CatalogBase
-from utils.shopify_utils import get_access_token, list_client_products, get_product
+from shopify.utils.shopify_utils import get_access_token, list_client_products, get_product
 
 class ShopifyEngine(CatalogBase):
     def __init__(self,client_id:str):

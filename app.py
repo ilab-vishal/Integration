@@ -1,11 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 
-from webhook.shopify import router as shopify_router
+from shopify.webhook import shopify
 
 app = FastAPI(title="Shopify Webhook Handler")
 
-app.include_router(shopify_router)
+app.include_router(shopify.router)
 
 @app.get("/", include_in_schema=False)
 async def root():

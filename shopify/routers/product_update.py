@@ -1,19 +1,20 @@
 from fastapi import APIRouter, Request, Header, HTTPException
 import json
-from utils.shopify_router_utils import verify_shopify_webhook, is_duplicate_event, handle_product_change
+from shopify.utils.shopify_router_utils import verify_shopify_webhook, is_duplicate_event
 
 router = APIRouter()
 
-@router.post("/products/create")
-async def product_created(
+@router.post("/products/update")
+async def product_updated(
     request: Request,
     x_shopify_hmac_sha256: str = Header(None),
     x_shopify_event_id: str = Header(None)
 ):
-    print("🔔 Webhook received: products/create")
+    print("🔔 Webhook received: products/update")
     
     if x_shopify_event_id and is_duplicate_event(x_shopify_event_id):
-        print("⚠️  Duplicate event - skipping")
+        print("⚠️  Duplicate event - skipping (already processed)")
+        print("   💡 To see product data, trigger a NEW product update in Shopify")
         return 200
     
     body = await request.body()
@@ -29,10 +30,9 @@ async def product_created(
     product = json.loads(body.decode("utf-8"))
 
     print("\n" + "="*60)
-    print(" PRODUCT DATA (CREATE):")
+    print(" PRODUCT DATA (UPDATE):")
     print("="*60)
     print(product)
     print("="*60 + "\n")
-    # handle_product_change("created", product)
 
     return 200

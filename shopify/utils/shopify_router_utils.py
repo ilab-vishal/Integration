@@ -33,24 +33,3 @@ def verify_shopify_webhook(data: bytes, hmac_header: str):
     print(f"🔐 Received HMAC: {hmac_header}")
     print(f"🔐 Match: {hmac.compare_digest(computed_hmac, hmac_header)}")
     return hmac.compare_digest(computed_hmac, hmac_header)
-
-def handle_product_change(event: str, product: dict):
-    print("\n" + "=" * 60)
-    print(f"📦 Shopify Product {event.upper()}")
-    print(f"ID: {product.get('id')}")
-    print(f"Title: {product.get('title')}")
-    print(f"Status: {product.get('status')}")
-    print(f"Updated At: {product.get('updated_at')}")
-
-    if product.get("variants"):
-        print(f"\n📋 Variants ({len(product['variants'])} total):")
-        for v in product["variants"]:
-            print(
-                f"  - ID: {v.get('id', 'N/A')} | "
-                f"Title: {v.get('title', 'N/A')} | "
-                f"SKU: {v.get('sku', 'N/A')} | "
-                f"Price: ${v.get('price', 'N/A')} | "
-                f"Inventory: {v.get('inventory_quantity', 'N/A')}"
-            )
-
-    print("=" * 60 + "\n")
