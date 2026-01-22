@@ -1,5 +1,5 @@
 from base.base import CatalogBase
-from shopify.services.shopify_services import get_access_token, list_client_products, get_client_product
+from shopify.services.shopify_services import get_access_token, list_client_products, get_client_product, get_connection_test_results
 
 class ShopifyEngine(CatalogBase):
     def __init__(self,client_id:str):
@@ -13,7 +13,11 @@ class ShopifyEngine(CatalogBase):
             self._access_token = access_credentials.get("access_token")
             self._access_token_expires_in = access_credentials.get("expires_in")
 
-
+    def test_connection(self):
+        self._get_access_token()
+        connection_data = get_connection_test_results(self._client_id, self._access_token)
+        return connection_data
+        
     def list_products(self, limit:int = None):
         self._get_access_token()
         products = list_client_products(self._client_id, self._access_token, limit)

@@ -5,6 +5,7 @@ from shopify.config import (
     get_product_url,
     get_store_url,
     list_products_url,
+    get_connection_test_url
 )
 
 def _get_store_url(client_id: str):
@@ -76,6 +77,21 @@ def get_client_product(client_id: str,access_token: str, product_id: int):
     }
     
     response = requests.get(products_url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+def get_connection_test_results(client_id: str, access_token: str):
+    store_url = _get_store_url(client_id)
+    if not store_url:
+        raise ValueError(f"Unknown Shopify client_id: {client_id}")
+    connection_test_url = get_connection_test_url(store_url)
+    headers = {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": access_token
+    }
+    response = requests.get(connection_test_url, headers=headers)
     if response.status_code == 200:
         return response.json()
     else:
